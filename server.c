@@ -97,7 +97,6 @@ document_t *document_from_stream(int connfd) {
       header_item_t *content_length = get_header_item(header, "CONTENT-LENGTH");
       if (content_length) {
         body_size = str_to_size_t(content_length->value);
-        printf("%zu\n", body_size);
         raw_body = malloc(body_size + 1);
         size_t remaining = nread - header_end - 1;
         if (remaining > 0) {

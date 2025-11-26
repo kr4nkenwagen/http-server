@@ -125,7 +125,7 @@ static char *load_file(const char *filepath) {
 }
 
 const char *fetch_body(const char *target) {
-  char path[1024];
+  char path[BUFFER_SIZE];
   snprintf(path, sizeof(path), "%s%s", TARGET_DIRECTORY, target);
   char *content = load_file(path);
   if (content) {
