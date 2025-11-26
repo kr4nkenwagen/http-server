@@ -13,8 +13,6 @@
 #include <threads.h>
 #include <unistd.h>
 
-#define DEBUG
-
 size_t str_to_size_t(const char *s) {
   char *end;
   unsigned long long val = strtoull(s, &end, 10);
@@ -56,9 +54,7 @@ int write_to_conn(int connfd, const char *data) {
   return 0;
 }
 
-int handle_conn(void *arg) {
-  int connfd = *(int *)arg;
-  free(arg);
+document_t *document_from_stream(int connfd) {
   unsigned char buffer[BUFFER_SIZE];
   size_t raw_header_size = 0;
   unsigned char *raw_header = malloc(BUFFER_SIZE);
@@ -67,6 +63,9 @@ int handle_conn(void *arg) {
   int header_complete = 0;
   size_t body_size = 0;
   unsigned char *raw_body = NULL;
+  body_t *body;
+  header_t *header;
+  document_t *document;
   while (!header_complete && (nread = read(connfd, buffer, BUFFER_SIZE)) > 0) {
     raw_header = realloc(raw_header, raw_header_size + nread + 1);
     printf("%s", buffer);
@@ -89,9 +88,8 @@ int handle_conn(void *arg) {
       raw_header_size += header_end;
       raw_header[raw_header_size] = '\0';
       header_complete = 1;
-      header_t *header = parse_header(raw_header);
+      header = parse_header(raw_header);
       header_item_t *content_length = get_header_item(header, "CONTENT-LENGTH");
-      body_t *body;
       if (content_length) {
         body_size = str_to_size_t(content_length->value);
         raw_body = malloc(body_size + 1);
@@ -105,30 +103,38 @@ int handle_conn(void *arg) {
         }
         body = parse_body((const char *)raw_body, body_size);
         free(raw_body);
+        free(raw_header);
       }
-      document_t *document = create_document(header, body);
-      const char *target = fetch_body(document->header->request_line->target);
-
-      body_t *response_body =
-          create_body(document->header->request_line->target);
-      header_t *response_header = create_default_header();
-      response_header->type = RESPONSE;
-      if (!response_body) {
-        response_header->response_line =
-            create_response_line(NOT_FOUND, "HTTP/1.1");
-      } else {
-        response_header->response_line = create_response_line(OK, "HTTP/1.1");
-      }
-      document_t *response_document =
-          create_document(response_header, response_body);
-      const char *response = serialize_document(response_document);
-      printf("%s\n", response);
-      write_to_conn(connfd, response);
     }
   }
-  free(raw_header);
+  return create_document(header, body);
+}
+
+int handle_conn(void *arg) {
+  int connfd = *(int *)arg;
+  free(arg);
+  printf("client (id:%d) connected\n", connfd);
+  document_t *request_document = document_from_stream(connfd);
+  const char *target =
+      fetch_body(request_document->header->request_line->target);
+
+  body_t *response_body =
+      create_body(request_document->header->request_line->target);
+  header_t *response_header = create_default_header();
+  response_header->type = RESPONSE;
+  if (!response_body) {
+    response_header->response_line =
+        create_response_line(NOT_FOUND, "HTTP/1.1");
+  } else {
+    response_header->response_line = create_response_line(OK, "HTTP/1.1");
+  }
+  document_t *response_document =
+      create_document(response_header, response_body);
+  const char *response = serialize_document(response_document);
+  printf("%s\n", response);
+  write_to_conn(connfd, response);
   close(connfd);
-  printf("Client disconnected\n");
+  printf("client(id:%d) disconnected\n", connfd);
   return EXIT_SUCCESS;
 }
 
@@ -158,7 +164,6 @@ int server() {
     if (connfd < 0) {
       continue;
     }
-    printf("client connected\n");
     pthread_t tid;
     int *pconn = malloc(sizeof(int));
     *pconn = connfd;
