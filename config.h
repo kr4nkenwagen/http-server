@@ -7,4 +7,6 @@
 #define TARGET_DIRECTORY "target"
 #define DEFAULT_INDEX "index.htm"
 
+#define VERSION "HTTP/1.1"
+
 #endif // CONFIG

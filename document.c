@@ -22,7 +22,7 @@ document_t *create_document(header_t *header, body_t *body) {
   if (!header) {
     header = create_default_header();
     header->type = RESPONSE;
-    header->response_line = create_response_line(OK, "HTTP/1.1");
+    header->response_line = create_response_line(OK, VERSION);
   }
   document_t *document = malloc(sizeof(document_t));
   if (document == NULL) {

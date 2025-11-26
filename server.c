@@ -1,5 +1,7 @@
 #include "config.h"
 #include "document.h"
+#include "header.h"
+#include "response.h"
 #include <arpa/inet.h>
 #include <asm-generic/socket.h>
 #include <netinet/in.h>
@@ -62,8 +64,8 @@ document_t *document_from_stream(int connfd) {
   int header_complete = 0;
   size_t body_size = 0;
   unsigned char *raw_body = NULL;
-  body_t *body;
-  header_t *header;
+  body_t *body = NULL;
+  header_t *header = NULL;
   document_t *document;
   while (!header_complete && (nread = read(connfd, buffer, BUFFER_SIZE)) > 0) {
     raw_header = realloc(raw_header, raw_header_size + nread + 1);
@@ -90,6 +92,7 @@ document_t *document_from_stream(int connfd) {
       header_item_t *content_length = get_header_item(header, "CONTENT-LENGTH");
       if (content_length) {
         body_size = str_to_size_t(content_length->value);
+        printf("%zu\n", body_size);
         raw_body = malloc(body_size + 1);
         size_t remaining = nread - header_end - 1;
         if (remaining > 0) {
@@ -118,16 +121,8 @@ int handle_conn(void *arg) {
 
   body_t *response_body =
       create_body(request_document->header->request_line->target);
-  header_t *response_header = create_default_header();
-  response_header->type = RESPONSE;
-  if (!response_body) {
-    response_header->response_line =
-        create_response_line(NOT_FOUND, "HTTP/1.1");
-  } else {
-    response_header->response_line = create_response_line(OK, "HTTP/1.1");
-  }
   document_t *response_document =
-      create_document(response_header, response_body);
+      create_response(response_body ? OK : NOT_FOUND, response_body);
   const char *response = serialize_document(response_document);
   write_to_conn(connfd, response);
   close(connfd);
