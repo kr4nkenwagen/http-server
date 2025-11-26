@@ -3,5 +3,6 @@
 #include "document.h"
 
 document_t *create_response(RESPONSE_CODE_T code, body_t *body);
+const char *fetch_body(const char *target);
 
 #endif // !RESPONSE
