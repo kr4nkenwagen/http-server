@@ -127,9 +127,9 @@ static char *load_file(const char *filepath) {
 
 const char *fetch_body(const char *target) {
   char path[BUFFER_SIZE];
-  snprintf(path, sizeof(path), "%s%s", TARGET_DIRECTORY, target);
+  snprintf(path, BUFFER_SIZE, "%s%s", TARGET_DIRECTORY, target);
   if (target[strlen(target) - 1] == '/') {
-    snprintf(path, sizeof(path), "%s%s/index.htm", TARGET_DIRECTORY, target);
+    snprintf(path, sizeof(path), "%s%sindex.htm", TARGET_DIRECTORY, target);
   }
   char *content = load_file(path);
   if (content) {

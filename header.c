@@ -120,15 +120,16 @@ static header_request_line_t *parse_request_line(unsigned char *raw_header) {
   int target_start = raw_header_index;
   while (raw_header[raw_header_index++] != ' ') {
   }
-  request_line->target = calloc(raw_header_index - target_start - 1, 1);
+  request_line->target = calloc(raw_header_index - target_start, 1);
   strncpy(request_line->target, (char *)raw_header + target_start,
           raw_header_index - target_start - 1);
-  int protocol_start = raw_header_index + 1;
+  int protocol_start = raw_header_index;
   while (raw_header[raw_header_index++] != '\n') {
   }
   request_line->version = calloc(raw_header_index - protocol_start - 2, 1);
   strncpy(request_line->version, (char *)raw_header + protocol_start,
           raw_header_index - 2 - protocol_start);
+  printf("%s\n", request_line->target);
   return request_line;
 }
 
@@ -182,7 +183,7 @@ char *get_time() {
   struct tm gmt;
   gmtime_r(&now, &gmt); // convert to UTC / GMT
 
-  char *buf = malloc(100);
+  char *buf = calloc(100, 1);
   if (!buf) {
     return "";
   }
