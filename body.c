@@ -18,7 +18,7 @@ body_t *parse_body(const char *raw_body, size_t size) {
     return NULL;
   }
   body->size = size;
-  strcpy((char *)body->data, raw_body);
+  memcpy(body->data, raw_body, body->size);
   return body;
 }
 
@@ -57,6 +57,6 @@ void destroy_body(body_t *body) {
   if (body->data) {
     free(body->data);
   }
-  //  free(body);
+  free(body);
 }
 unsigned char *serialize_body(body_t *body) { return body->data; }

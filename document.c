@@ -1,7 +1,6 @@
 #include "document.h"
 #include "config.h"
 #include "header.h"
-#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -41,26 +40,20 @@ document_t *create_document(header_t *header, body_t *body) {
   return document;
 }
 
-unsigned char *serialize_document(document_t *document) {
+unsigned char *serialize_document(document_t *document, size_t *size) {
   unsigned char *header = serialize_header(document->header);
   size_t header_len = strlen((char *)header);
-  size_t body_len = 0;
-  unsigned char *body_str = NULL;
-  header_item_t *content_length =
-      get_header_item(document->header, "CONTENT-LENGTH");
-  header_item_t *content_type =
-      get_header_item(document->header, "CONTENT-TYPE");
-  if (content_length && document->body) {
-    body_str = serialize_body(document->body);
-    body_len = str_to_size_t(content_length->value);
+  size_t total_len = header_len + 1; // +1 for '\0'
+  if (document->body) {
+    total_len += document->body->size;
   }
-  size_t total_len = header_len + body_len + 1; // +1 for '\0'
   unsigned char *output = malloc(total_len);
   if (!output)
     return NULL;
   memcpy(output, header, header_len);
-  if (body_str)
-    memcpy(output + header_len, body_str, body_len);
+  if (document->body)
+    memcpy(output + header_len, document->body->data, document->body->size);
+  *size = total_len;
   output[total_len - 1] = '\0';
   return output;
 }

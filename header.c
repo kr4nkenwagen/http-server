@@ -244,36 +244,33 @@ unsigned char *serialize_header(header_t *header) {
     APPEND(get_response_code_string(header->response_line->code));
     APPEND(LF);
   }
-
   for (int i = 0; i < header->count; i++) {
     APPEND(header->items[i]->key);
     APPEND(": ");
     APPEND(header->items[i]->value);
     APPEND(LF);
   }
-
   APPEND(CRLF);
-  APPEND(CRLF);
-
 #undef APPEND
-  return output; // caller must free
+  return output;
 }
 
 header_response_line_t *create_response_line(RESPONSE_CODE_T code,
                                              char *version) {
-  header_response_line_t *rl = malloc(sizeof(header_response_line_t));
-  if (!rl) {
+  header_response_line_t *response_line =
+      malloc(sizeof(header_response_line_t));
+  if (!response_line) {
     return NULL;
   }
-  rl->version = malloc(strlen(version) + 1);
-  if (!rl->version) {
-    free(rl);
+  response_line->version = malloc(strlen(version) + 1);
+  if (!response_line->version) {
+    free(response_line);
     return NULL;
   }
-  strcpy(rl->version, version);
-  rl->version = version;
-  rl->code = code;
-  return rl;
+  strcpy(response_line->version, version);
+  response_line->version = version;
+  response_line->code = code;
+  return response_line;
 }
 
 static void combine_duplicate_header_items(header_t *header) {

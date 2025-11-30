@@ -26,12 +26,9 @@ ssize_t read_full(int fd, unsigned char *buf, size_t count) {
   return total_read;
 }
 
-int write_to_conn(int connfd, unsigned char *data) {
+int write_to_conn(int connfd, unsigned char *data, size_t length) {
 
-  size_t remaining = 0;
-  while (data[remaining++] != '\0') {
-  }
-  remaining--;
+  size_t remaining = length;
   size_t idx = 0;
   while (remaining > 0) {
     ssize_t to_write = remaining < BUFFER_SIZE ? remaining : BUFFER_SIZE;
@@ -122,8 +119,9 @@ void handle_GET(document_t *request, int connfd) {
     attach_header(response_document->header,
                   create_header_item("content-type", "text/html"));
   }
-  unsigned char *response = serialize_document(response_document);
-  write_to_conn(connfd, response);
+  size_t size = 0;
+  unsigned char *response = serialize_document(response_document, &size);
+  write_to_conn(connfd, response, size);
   destroy_document(response_document);
 }
 
@@ -145,7 +143,6 @@ void *handle_conn(void *arg) {
   case CONNECT:
     break;
   }
-  printf("%s\n", serialize_document(request_document));
   destroy_document(request_document);
   close(connfd);
   printf("client(id:%d) disconnected\n", connfd);
