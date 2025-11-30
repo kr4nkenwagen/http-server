@@ -115,10 +115,20 @@ void handle_GET(document_t *request, int connfd) {
     attach_header(
         response_document->header,
         create_header_item("content-type", str_join("image/", file_type)));
-  } else {
+  } else if (strcmp(file_type, "html") == 0 || strcmp(file_type, "htm") == 0) {
     attach_header(response_document->header,
                   create_header_item("content-type", "text/html"));
+  } else if (strcmp(file_type, "css") == 0) {
+    attach_header(response_document->header,
+                  create_header_item("content-type", "text/css"));
+
+  } else if (strcmp(file_type, "js") == 0) {
+    attach_header(response_document->header,
+                  create_header_item("content-type", "application/javascript"));
+
+    printf("%s\n", file_type);
   }
+
   size_t size = 0;
   unsigned char *response = serialize_document(response_document, &size);
   write_to_conn(connfd, response, size);

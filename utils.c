@@ -25,15 +25,31 @@ static bool starts_with(const unsigned char *buf, const char *str, size_t n) {
   return memcmp(buf, str, n) == 0;
 }
 
+static char *get_file_extension(char *path) {
+  char *out = calloc(BUFFER_SIZE, 1);
+  for (int idx = strlen(path); idx > 0; idx--) {
+    if (path[idx] == '.') {
+      break;
+      out = strdup(path + idx);
+    }
+    if (path[idx] == '/') {
+      out = "html";
+    }
+  }
+  return out;
+}
+
 bool is_image_file(char *path, char **out) {
   unsigned char buf[BUFFER_SIZE];
   FILE *f = fopen(path, "rb");
   if (!f) {
+    *out = get_file_extension(path);
     return false;
   }
   size_t n = fread(buf, 1, sizeof(buf), f);
   fclose(f);
   if (n < 12) {
+    *out = get_file_extension(path);
     return false;
   }
   /* --- JPEG: FF D8 FF --- */
@@ -95,6 +111,8 @@ bool is_image_file(char *path, char **out) {
       return true;
     }
   }
+  *out = get_file_extension(path);
+  printf("%s\n", *out);
   return false;
 }
 
