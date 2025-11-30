@@ -1,4 +1,5 @@
 #include "body.h"
+#include "config.h"
 #include "response.h"
 #include "utils.h"
 #include <stddef.h>
@@ -30,7 +31,7 @@ body_t *create_body(const char *target) {
   if (!data) {
     return NULL;
   }
-  char **out;
+  char *out[BUFFER_SIZE] = {0};
   if (is_image_file((char *)target, out)) {
     body->size = file_size((char *)target);
 
@@ -56,6 +57,6 @@ void destroy_body(body_t *body) {
   if (body->data) {
     free(body->data);
   }
-  free(body);
+  //  free(body);
 }
 unsigned char *serialize_body(body_t *body) { return body->data; }

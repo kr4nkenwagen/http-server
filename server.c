@@ -145,6 +145,7 @@ void *handle_conn(void *arg) {
   case CONNECT:
     break;
   }
+  printf("%s\n", serialize_document(request_document));
   destroy_document(request_document);
   close(connfd);
   printf("client(id:%d) disconnected\n", connfd);

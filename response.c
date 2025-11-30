@@ -1,9 +1,7 @@
-#include "config.h"
 #include "document.h"
 #include "header.h"
 #include "utils.h"
 #include <stdbool.h>
-#include <stdio.h>
 #include <string.h>
 
 static document_t *create_OK_document(body_t *body) {
