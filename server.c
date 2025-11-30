@@ -125,6 +125,7 @@ void handle_GET(document_t *request, int connfd) {
     attach_header(response_document->header,
                   create_header_item("content-type", "application/javascript"));
   }
+  printf("%s\n", file_type);
   size_t size = 0;
   unsigned char *response = serialize_document(response_document, &size);
   write_to_conn(connfd, response, size);
