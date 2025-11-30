@@ -116,7 +116,6 @@ bool is_image_file(char *path, char **out) {
     }
   }
   *out = get_file_extension(path);
-  printf("%s\n", *out);
   return false;
 }
 
