@@ -1,123 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Welcome</title>
-
-<style>
-  :root {
-    --fg: #C1C497;
-    --bg: #111C18;
-    --sel-fg: #111C18;
-    --sel-bg: #C1C497;
-    --cursor: #D7C995;
-    --cursor-text: #000000;
-    --active-tab-fg: #111C18;
-    --active-tab-bg: #C1C497;
-    --inactive-tab-fg: #C1C497;
-    --inactive-tab-bg: #111C18;
-
-    --black: #23372B;
-    --black-bright: #53685B;
-
-    --red: #FF5345;
-    --red-bright: #DB9F9C;
-
-    --green: #549E6A;
-    --green-bright: #63b07a;
-
-    --yellow: #459451;
-    --yellow-bright: #E5C736;
-
-    --blue: #509475;
-    --blue-bright: #ACD4CF;
-
-    --magenta: #D2689C;
-    --magenta-bright: #75BBB3;
-
-    --cyan: #2DD5B7;
-    --cyan-bright: #8CD3CB;
-
-    --white: #F6F5DD;
-    --white-bright: #9EEBB3;
-  }
-
-  body {
-    margin: 0;
-    font-family: "Inter", "Segoe UI", sans-serif;
-    background: var(--bg);
-    color: var(--fg);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 2rem;
-  }
-
-  .box {
-    max-width: 650px;
-    padding: 50px;
-    background: rgba(35, 55, 43, 0.28);
-    border: 1px solid var(--green);
-    border-radius: 14px;
-    backdrop-filter: blur(6px);
-    animation: fadeIn 0.8s ease forwards;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  h1 {
-    font-size: 3rem;
-    margin: 0 0 10px;
-    color: var(--cyan);
-    font-weight: 700;
-  }
-
-  p {
-    font-size: 1.3rem;
-    margin: 0 0 30px;
-    color: var(--white);
-  }
-
-  a.btn {
-    display: inline-block;
-    color: var(--bg);
-    background: var(--cyan);
-    padding: 14px 32px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.05rem;
-    transition: 0.25s ease;
-  }
-
-  a.btn:hover {
-    background: var(--cyan-bright);
-    transform: translateY(-3px);
-  }
-
-  footer {
-    margin-top: 35px;
-    font-size: 0.9rem;
-    color: var(--black-bright);
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programmer Portfolio</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <div class="box">
-    <h1>Welcome</h1>
-    <p>This is home</p>
+  <header>
+    <h1>My Portfolio</h1>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
 
-    <a href="/404.htm" class="btn">Visit 404 Page</a>
+  <section class="hero">
+    <h2>Hello, I'm a Programmer</h2>
+    <p>Building modern, clean, and interactive web experiences with passion.</p>
+    <button id="scrollToProjects">See My Work</button>
+  </section>
 
-    <footer>kr4nkenserver</footer>
-  </div>
+  <section id="about" class="about">
+    <h2>About Me</h2>
+    <p>I am a passionate programmer with experience in web development, creating interactive and responsive applications. I love turning ideas into reality with clean and efficient code.</p>
+  </section>
+
+  <section id="projects">
+    <h2>Projects</h2>
+    <div class="projects">
+      <div class="project-card">
+        <h3>Project One</h3>
+        <p>A web app that demonstrates interactive charts and visualizations using JavaScript and D3.js.</p>
+      </div>
+      <div class="project-card">
+        <h3>Project Two</h3>
+        <p>An e-commerce website built with React and Node.js, focusing on performance and user experience.</p>
+      </div>
+      <div class="project-card">
+        <h3>Project Three</h3>
+        <p>A personal blog built with HTML, CSS, and JavaScript, optimized for SEO and accessibility.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <h2>Skills</h2>
+    <div class="skills">
+      <span class="skill">HTML</span>
+      <span class="skill">CSS</span>
+      <span class="skill">JavaScript</span>
+      <span class="skill">React</span>
+      <span class="skill">Node.js</span>
+      <span class="skill">Python</span>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <h2>Contact Me</h2>
+    <form>
+      <input type="text" placeholder="Your Name" required>
+      <input type="email" placeholder="Your Email" required>
+      <textarea rows="5" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+
+  <footer>
+    &copy; 2025 My Portfolio. Designed with Osaka-Jade.
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
-

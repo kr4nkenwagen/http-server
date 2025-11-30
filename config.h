@@ -10,7 +10,7 @@
 #endif // !
 #define TARGET_DIRECTORY "target"
 #define DEFAULT_INDEX "index.htm"
-
+#define PAGE_404 "/404.htm"
 #define VERSION "HTTP/1.1"
 
 #endif // CONFIG
