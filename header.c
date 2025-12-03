@@ -137,6 +137,18 @@ static header_request_line_t *parse_request_line(unsigned char *raw_header) {
     request_line->method = GET;
   } else if (strcmp(method, "POST") == 0) {
     request_line->method = POST;
+  } else if (strcmp(method, "PUT") == 0) {
+    request_line->method = PUT;
+  } else if (strcmp(method, "OPTIONS") == 0) {
+    request_line->method = OPTIONS;
+  } else if (strcmp(method, "HEAD") == 0) {
+    request_line->method = HEAD;
+  } else if (strcmp(method, "CONNECT") == 0) {
+    request_line->method = CONNECT;
+  } else if (strcmp(method, "TRACE") == 0) {
+    request_line->method = TRACE;
+  } else if (strcmp(method, "DELETE") == 0) {
+    request_line->method = DELETE;
   }
   int target_start = raw_header_index;
   while (raw_header[raw_header_index++] != ' ') {
@@ -166,8 +178,8 @@ static int find_header_count(unsigned char *raw_header) {
 /**
  * @brief Finds a header item in the given header by its name.
  *
- * The function searches for a header item with the specified name in the given
-header structure. If an item with that name i is found, it is returned.
+ * The function searches for a header item with the specified name in the
+given header structure. If an item with that name i is found, it is returned.
 Otherwise, NULL is returned.
  *
  * @param header The header structure to search in.
@@ -186,9 +198,9 @@ header_item_t *get_header_item(header_t *header, char *name) {
 /**
  * @brief Attaches a header item to the end of the header list.
  *
- * This function attaches a header item to the end of the header list, which is
-a linked list of header items. The function t takes two arguments: a pointer to
-the header list and a pointer to the header item to be attached.
+ * This function attaches a header item to the end of the header list, which
+is a linked list of header items. The function t takes two arguments: a
+pointer to the header list and a pointer to the header item to be attached.
  *
  * @param header A pointer to the header list.
  * @param item A pointer to the header item to be attached.
@@ -207,8 +219,9 @@ void attach_header(header_t *header, header_item_t *item) {
 /**
  * @brief Creates a new header item with the given key and value.
  *
- * This function creates a new header item with the specified key and value. The
-key and value are copied, so they can be fre freed after this function returns.
+ * This function creates a new header item with the specified key and value.
+The key and value are copied, so they can be fre freed after this function
+returns.
  *
  * @param key The key for the header item.
  * @param value The value for the header item.
@@ -236,8 +249,8 @@ header_item_t *create_header_item(char *key, char *value) {
  *
  * This function creates a default HTTP header that includes essential headers
 such as "Connection", "Date", "Server", and "K "Keep-Alive". The "Connection"
-header is set to "keep-alive" and the "Keep-Alive" header is set to "timeout=5,
-max=997".
+header is set to "keep-alive" and the "Keep-Alive" header is set to
+"timeout=5, max=997".
  *
  * @return A pointer to a `header_t` structure containing the default HTTP
 header.
@@ -325,7 +338,8 @@ unsigned char *serialize_header(header_t *header) {
  *
  * The created response line is returned, or NULL if an error occurred.
  *
- * @param version The version of the HTTP protocol to use in the response line.
+ * @param version The version of the HTTP protocol to use in the response
+ * line.
  * @param code The response code to use in the response line.
  * @return The newly created header response line.
  */
