@@ -441,7 +441,9 @@ header_t *parse_header(unsigned char *raw_header) {
  */
 void destroy_header(header_t *header) {
   if (header->type == REQUEST) {
-    free(header->request_line->target);
+    if (header->request_line->target) {
+      free(header->request_line->target);
+    }
     free(header->request_line->version);
     free(header->request_line);
   }
