@@ -9,7 +9,7 @@ static document_t *create_OK_document(body_t *body) {
   header_t *header = create_default_header();
   header->type = RESPONSE;
   header->response_line = create_response_line(OK, "HTTP/1.1");
-  document_t *document = create_document(header, body);
+  document_t *document = create_document(header, body, RESPONSE);
   return document;
 }
 
@@ -18,7 +18,7 @@ static document_t *create_INTERNAL_SERVER_ERROR_document() {
   header->type = RESPONSE;
   header->response_line =
       create_response_line(INTERNAL_SERVER_ERROR, "HTTP/1.1");
-  document_t *document = create_document(header, NULL);
+  document_t *document = create_document(header, NULL, RESPONSE);
   return document;
 }
 
@@ -26,8 +26,8 @@ static document_t *create_NOT_FOUND_document() {
   header_t *header = create_default_header();
   header->type = RESPONSE;
   header->response_line = create_response_line(NOT_FOUND, "HTTP/1.1");
-  body_t *body = create_body((unsigned char *)PAGE_404);
-  document_t *document = create_document(header, body);
+  body_t *body = create_body((const char *)PAGE_404);
+  document_t *document = create_document(header, body, RESPONSE);
   return document;
 }
 
@@ -110,11 +110,13 @@ document_t *create_response(RESPONSE_CODE_T code, body_t *body) {
 /**
  * @brief Fetches the contents of a web page and returns it as a string.
  *
- * This function takes in a URL as input, fetches the contents of the web page, and returns it as a string. If the URL does n
-not point to an existing web page, it will return NULL.
+ * This function takes in a URL as input, fetches the contents of the web page,
+and returns it as a string. If the URL does n not point to an existing web page,
+it will return NULL.
  *
  * @param target The URL of the web page to be fetched.
- * @return The contents of the web page as a string, or NULL if the URL does not point to an existing web page.
+ * @return The contents of the web page as a string, or NULL if the URL does not
+point to an existing web page.
  */
 unsigned char *fetch_body(char *target) {
   bool needs_malloc = false;

@@ -134,7 +134,7 @@ document_t *document_from_stream(int connfd) {
     }
   }
   free(raw_header);
-  return create_document(header, body);
+  return create_document(header, body, REQUEST);
 }
 
 /**
@@ -235,11 +235,6 @@ void *handle_conn(void *arg) {
   free(arg);
   printf("client (id:%d) connected\n", connfd);
   document_t *request_document = document_from_stream(connfd);
-  if (!request_document->header || !request_document->header->request_line ||
-      !request_document->header->request_line->method) {
-    destroy_document(request_document);
-    return NULL;
-  }
   switch (request_document->header->request_line->method) {
   case GET:
     handle_GET(request_document, connfd);
