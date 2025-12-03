@@ -235,6 +235,11 @@ void *handle_conn(void *arg) {
   free(arg);
   printf("client (id:%d) connected\n", connfd);
   document_t *request_document = document_from_stream(connfd);
+  if (!request_document->header || !request_document->header->request_line) {
+    printf("ddd\n");
+    destroy_document(request_document);
+    return NULL;
+  }
   switch (request_document->header->request_line->method) {
   case GET:
     handle_GET(request_document, connfd);
