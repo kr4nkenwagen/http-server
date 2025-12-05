@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+char *size_t_to_string(size_t value);
 char *get_time();
 char *translate_target(char *target);
 size_t file_size(char *filepath);

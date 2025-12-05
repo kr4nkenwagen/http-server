@@ -247,11 +247,22 @@ void *handle_conn(void *arg) {
     handle_POST(request_document, connfd);
     break;
   case OPTIONS:
+    handle_POST(request_document, connfd);
+    break;
   case HEAD:
+    handle_POST(request_document, connfd);
+    break;
   case PUT:
+    handle_POST(request_document, connfd);
+    break;
   case DELETE:
+    handle_POST(request_document, connfd);
+    break;
   case TRACE:
+    handle_POST(request_document, connfd);
+    break;
   case CONNECT:
+    handle_POST(request_document, connfd);
     break;
   }
   destroy_document(request_document);

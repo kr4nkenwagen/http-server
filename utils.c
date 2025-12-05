@@ -7,6 +7,31 @@
 #include <time.h>
 
 /**
+ * @brief Converts a size_t value to a string.
+ *
+ * This function converts a size_t value to a string representation that can be
+used for printing or storing. The result resulting string will have the format
+"zu", where "u" is the unsigned integer representation of the value.
+ *
+ * @param value The size_t value to convert.
+ * @return A newly allocated string containing the converted value, or NULL if
+an error occurred.
+ */
+char *size_t_to_string(size_t value) {
+  char buffer[32];
+  int needed = snprintf(buffer, sizeof(buffer), "%zu", value);
+  if (needed < 0) {
+    return NULL;
+  }
+  char *result = malloc((size_t)needed + 1);
+  if (!result) {
+    return NULL;
+  }
+  snprintf(result, needed + 1, "%zu", value);
+  return result;
+}
+
+/**
  * @brief Get the current time in UTC/GMT format.
  *
  * This function returns a string representation of the current time in UTC/GMT
