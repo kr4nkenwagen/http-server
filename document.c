@@ -5,20 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-static char *size_t_to_string(size_t value) {
-  char buffer[32];
-  int needed = snprintf(buffer, sizeof(buffer), "%zu", value);
-  if (needed < 0) {
-    return NULL;
-  }
-  char *result = malloc((size_t)needed + 1);
-  if (!result) {
-    return NULL;
-  }
-  snprintf(result, needed + 1, "%zu", value);
-  return result;
-}
-
 /**
  * @brief Creates a new document with the given header and body.
  *

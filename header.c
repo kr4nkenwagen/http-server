@@ -131,7 +131,7 @@ static header_request_line_t *parse_request_line(unsigned char *raw_header) {
   int raw_header_index = 0;
   while (raw_header[raw_header_index++] != ' ') {
   }
-  char *method = calloc(raw_header_index, 1);
+  char *method = calloc(raw_header_index + 1, 1);
   strncpy(method, (char *)raw_header, raw_header_index - 1);
   if (strcmp(method, "GET") == 0) {
     request_line->method = GET;
@@ -366,12 +366,19 @@ static void combine_duplicate_header_items(header_t *header) {
       continue;
     }
     for (int x = i + 1; x < header->count; x++) {
-      if (header->items[x] == NULL) {
+      if (!header->items[x]) {
         continue;
       }
       if (strcmp(header->items[i]->key, header->items[x]->key) == 0) {
         strcat(header->items[i]->value, ", ");
-        strcat(header->items[i]->value, header->items[x]->value);
+        char *value_separator = str_join(header->items[i]->value, ", ");
+        char *new_value =
+            str_join(header->items[i]->value, header->items[x]->value);
+        free(value_separator);
+        free(header->items[i]->value);
+        header->items[i]->value = new_value;
+        free(header->items[x]->key);
+        free(header->items[x]->value);
         free(header->items[x]);
         header->items[x] = NULL;
       }
@@ -458,5 +465,6 @@ void destroy_header(header_t *header) {
     }
     free(header->items[i]);
   }
+  free(header->items);
   free(header);
 }
