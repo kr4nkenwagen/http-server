@@ -1,6 +1,7 @@
 #include "document.h"
 #include "config.h"
 #include "header.h"
+#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
