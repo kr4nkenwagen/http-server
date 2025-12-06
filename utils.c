@@ -271,6 +271,15 @@ size_t str_to_size_t(const char *s) {
  * @return A new string that is the result of joining `a` and `b`.
  */
 char *str_join(const char *a, const char *b) {
+  if (!a && !b) {
+    return NULL;
+  }
+  if (!b) {
+    return (char *)a;
+  }
+  if (!a) {
+    return (char *)b;
+  }
   size_t len_a = strlen(a);
   size_t len_b = strlen(b);
 
