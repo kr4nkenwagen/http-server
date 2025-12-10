@@ -154,11 +154,10 @@ document with the appropriate content type and sending it back to the client.
 void handle_GET(document_t *request, int connfd) {
   char *translated_target =
       translate_target(request->header->request_line->target);
-  unsigned char *target = fetch_body(translated_target);
   body_t *response_body = create_body(translated_target);
   document_t *response_document =
       create_response(response_body ? OK : NOT_FOUND, response_body);
-  char *file_type;
+  char *file_type = NULL;
   if (is_image_file(translated_target, &file_type)) {
     if (!file_type) {
       destroy_document(response_document);
@@ -167,13 +166,14 @@ void handle_GET(document_t *request, int connfd) {
     attach_header(
         response_document->header,
         create_header_item("content-type", str_join("image/", file_type)));
-  } else if (strcmp(file_type, "html") == 0 || strcmp(file_type, "htm") == 0) {
+  } else if (file_type && strcmp(file_type, "html") == 0 ||
+             strcmp(file_type, "htm") == 0) {
     attach_header(response_document->header,
                   create_header_item("content-type", "text/html"));
-  } else if (strcmp(file_type, "css") == 0) {
+  } else if (file_type && strcmp(file_type, "css") == 0) {
     attach_header(response_document->header,
                   create_header_item("content-type", "text/css"));
-  } else if (strcmp(file_type, "js") == 0) {
+  } else if (file_type && strcmp(file_type, "js") == 0) {
     attach_header(response_document->header,
                   create_header_item("content-type", "application/javascript"));
   }
